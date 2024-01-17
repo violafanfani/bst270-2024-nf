@@ -7,7 +7,7 @@ include { plotGGPlot } from './modules/rsteps.nf'
 
 process readMidus {
 
-    publishDir "${params.resultsDir}/tables/", pattern: "*midus*", mode: 'copy'
+    publishDir "${params.resultsDir}/${name}/tables/", pattern: "*midus*", mode: 'copy'
 
     input:
         tuple val(name),file(data_optimism), file(data_biomarker)
@@ -24,7 +24,7 @@ process readMidus {
 
 process plotFigure1 {
 
-    publishDir "${params.resultsDir}/figures/", pattern: "fig1.pdf", mode: 'copy'
+    publishDir "${params.resultsDir}/${name}/figures/", pattern: "fig1.pdf", mode: 'copy'
 
     input:
         tuple val(name),file(data_optimism), file(data_biomarker), file(midus), file(midus_log)
@@ -41,7 +41,7 @@ process plotFigure1 {
 
 process createTable2 {
 
-    publishDir "${params.resultsDir}/tables/", pattern: "table2.csv", mode: 'copy'
+    publishDir "${params.resultsDir}/${name}/tables/", pattern: "table2.csv", mode: 'copy'
 
     input:
         tuple val(name),file(data_optimism), file(data_biomarker), file(midus), file(midus_log)
@@ -57,13 +57,13 @@ process createTable2 {
 
 process plotFigureX {
 
-    publishDir "${params.resultsDir}/figures/", pattern: "fig*.pdf", mode: 'copy'
+    publishDir "${params.resultsDir}/${name}/figures/", pattern: "fig*.pdf", mode: 'copy'
 
     input:
-        tuple val(data),file(data_optimism), file(data_biomarker), file(midus), file(midus_log), val(column)
+        tuple val(name),file(data_optimism), file(data_biomarker), file(midus), file(midus_log), val(column)
 
     output:
-        tuple val(data),file(data_optimism), file(data_biomarker), file(midus), file(midus_log), val(column), file("fig_${column}.pdf")
+        tuple val(name),file(data_optimism), file(data_biomarker), file(midus), file(midus_log), val(column), file("fig_${column}.pdf")
 
     script:
     """
@@ -75,13 +75,13 @@ process plotFigureX {
 
 process plotFigureCorrelation {
 
-    publishDir "${params.resultsDir}/figures/", pattern: "correlations*", mode: 'copy'
+    publishDir "${params.resultsDir}/${name}/figures/", pattern: "correlations*", mode: 'copy'
 
     input:
-        tuple val(data),file(data_optimism), file(data_biomarker), file(midus), file(midus_log), file(table2), val(fig_format)
+        tuple val(name),file(data_optimism), file(data_biomarker), file(midus), file(midus_log), file(table2), val(fig_format)
 
     output:
-        tuple val(data),file(data_optimism), file(data_biomarker), file(midus), file(midus_log), file(table2), val(fig_format), file("correlations.${fig_format}")
+        tuple val(name),file(data_optimism), file(data_biomarker), file(midus), file(midus_log), file(table2), val(fig_format), file("correlations.${fig_format}")
 
     script:
     """
